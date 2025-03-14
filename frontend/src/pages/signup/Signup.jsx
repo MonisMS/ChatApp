@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GenderCheckbox from "./GenderCheckBox";
 import { Link } from "react-router-dom";
+import useSignup from "../../hooks/useSignup.js"; 
 const SignUp = () => {
 	const [inputs,setInputs]=useState({
 		fullName:'',
@@ -9,10 +10,15 @@ const SignUp = () => {
 		confirmPassword:'',
 		gender:''
 	})
+	const {loading,signup}=useSignup()
+	const handleCheckBoxChange=(gender)=>
+	{
+		setInputs({...inputs,gender})
+	}
 	
-	const handleSubmit=(e)=>{
+	const handleSubmit= async(e)=>{
 		e.preventDefault();
-		console.log(inputs)
+		await signup(inputs)
 	}
   	return (
    		<div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
@@ -68,7 +74,7 @@ const SignUp = () => {
    						/>
    					</div>
   
-   				<GenderCheckbox />
+   				<GenderCheckbox  onCheckBoxChange={handleCheckBoxChange} selectedGender={inputs.gender} / >
   
    					<Link to={"/login"} className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
    						Already have an account?
